@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exercise.pjt.model.dao.UserDao">
+	<select id="selectOne" resultType="User" parameterType="String">
+		SELECT *
+		FROM User
+		WHERE id = #{id}
+	</select>
+	
+	<select id="selectAll" resultType="User">
+		SELECT *
+		FROM User
+	</select>
+	
+	<!-- 유저 정보 추가하면서 스코어 초기화 -->
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO User (id, nickname, password, email, introduction)
+		VALUES (#{id}, #{nickname}, #{password}, #{email}, #{introduction});
+		INSERT INTO Score (userId, totalScore, todayScore, lastRegDate)
+		VALUES (#{id}, 0, 0, now());
+	</insert>
+	
+	<update id="updateUser" parameterType="User">
+		UPDATE User
+		SET nickname = #{nickname}, password = #{password}, email = #{email}, introduction = #{introduction}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 유저 정보 삭제, 스코어에서도 마찬가지 -->
+	<delete id="deleteUser" parameterType="String">
+		DELETE FROM Score
+		WHERE userId = #{id};
+		DELETE FROM User
+		WHERE id = #{id};
+	</delete>
+</mapper>

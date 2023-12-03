@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exercise.pjt.model.dao.ScoreDao">
+
+
+	<select id="selectScore" resultType="Score" parameterType="String">
+		SELECT *
+		FROM Score
+		WHERE userId = #{userId}
+	</select>
+	
+
+	<update id="updateScore" parameterType="Score">
+		UPDATE Score
+		SET totalScore = #{totalScore}, todayScore = #{todayScore}, lastRegDate = #{lastRegDate}
+		WHERE userId = #{userId}
+	</update>
+	
+	<insert id="saveScore" parameterType="Score">
+		INSERT INTO Score (userId, totalScore, todayScore, lastRegDate)
+		VALUES (#{userId}, #{totalScore}, #{todayScore}, #{lastRegDate})
+	</insert>
+	
+	<delete id="deleteScore" parameterType="String">
+		DELETE FROM Score
+		WHERE userId = #{userId}
+	</delete>
+	
+	<select id="selectRanking" resultType="Score">
+		SELECT *
+		FROM Score
+		ORDER BY totalScore DESC
+		LIMIT 50
+	</select>
+	
+		<select id="selectAllScores" resultType="Score">
+		SELECT *
+		FROM scores
+	</select>
+	
+	<select id="selectRankingScores" resultType="java.util.Map">
+		SELECT userId, totalScore
+		FROM scores
+		ORDER BY totalScore DESC
+		LIMIT 10
+	</select>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exercise.pjt.model.dao.ScoreDao">
+
+
+    <select id="selectScore" resultType="Score" parameterType="String">
+        SELECT *
+        FROM Score
+        WHERE userId = #{userId}
+    </select>
+    
+    <insert id="saveScore" parameterType="Score">
+        INSERT INTO Score (userId, totalScore, todayScore, lastRegDate)
+        VALUES (#{userId}, #{totalScore}, #{todayScore}, #{lastRegDate})
+    </insert>
+    
+    <delete id="deleteScore" parameterType="String">
+        DELETE FROM Score
+        WHERE userId = #{userId}
+    </delete>
+    
+    
+    <!-- 전체 랭킹 출력, 오늘 운동한 사람만 나오게 지정 -->
+    <select id="selectRanking" resultType="Score">
+        SELECT *
+        FROM Score
+        WHERE DATE_FORMAT(lastRegDate, "%Y-%m-%d") = CURDATE()
+        ORDER BY todayScore DESC
+    </select>
+    
+    <select id="selectAllScores" resultType="Score">
+        SELECT *
+        FROM Score
+    </select>
+    
+    
+    <select id="getExerciseScores" resultType="com.exercise.pjt.model.dto.ExerciseScore">
+        SELECT *
+        FROM Exercise
+        ORDER BY score;
+    </select>
+    
+    <!-- 운동 목록 조회 -->
+	<select id="getExerciseList" resultType="String">
+	    SELECT * FROM Exercise ORDER BY score;
+	</select>
+	
+	<!-- 점수 update -->
+	<update id="updateScore" parameterType="Score">
+		UPDATE Score
+		SET totalScore = totalScore + #{totalScore}, todayScore = todayScore + #{todayScore}, lastRegDate = now()
+		WHERE userId = #{userId}
+	</update>
+</mapper>
